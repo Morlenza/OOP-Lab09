@@ -1,7 +1,9 @@
 package it.unibo.oop.lab.lambda.ex01;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -14,12 +16,15 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 /**
- * This class will contain four utility functions on lists and maps, of which the first one is provided as example.
+ * This class will contain four utility functions on lists and maps, of which
+ * the first one is provided as example.
  * 
- * All such methods take as second argument a functional interface from the Java library (java.util.function).
- * This enables calling them by using the concise lambda syntax, as it's done in the main function.
+ * All such methods take as second argument a functional interface from the Java
+ * library (java.util.function). This enables calling them by using the concise
+ * lambda syntax, as it's done in the main function.
  * 
- * Realize the three methods **WITHOUT** using the Stream library, but only leveraging the lambdas.
+ * Realize the three methods **WITHOUT** using the Stream library, but only
+ * leveraging the lambdas.
  *
  */
 public final class LambdaUtilities {
@@ -28,14 +33,11 @@ public final class LambdaUtilities {
     }
 
     /**
-     * @param list
-     *            the input list
-     * @param op
-     *            the process to run on each element
-     * @param <T>
-     *            element type
-     * @return a new list containing, for each element of list, the element and
-     *         a processed version
+     * @param list the input list
+     * @param op   the process to run on each element
+     * @param <T>  element type
+     * @return a new list containing, for each element of list, the element and a
+     *         processed version
      */
     public static <T> List<T> dup(final List<T> list, final UnaryOperator<T> op) {
         final List<T> l = new ArrayList<>(list.size() * 2);
@@ -47,32 +49,26 @@ public final class LambdaUtilities {
     }
 
     /**
-     * @param list
-     *            input list
-     * @param pre
-     *            predicate to execute
-     * @param <T>
-     *            element type
-     * @return a list where each value is an Optional, holding the previous
-     *         value only if the predicate passes, and an Empty optional
-     *         otherwise.
+     * @param list input list
+     * @param pre  predicate to execute
+     * @param <T>  element type
+     * @return a list where each value is an Optional, holding the previous value
+     *         only if the predicate passes, and an Empty optional otherwise.
      */
     public static <T> List<Optional<T>> optFilter(final List<T> list, final Predicate<T> pre) {
         /*
          * Suggestion: consider Optional.filter
          */
-        return null;
+        final List<Optional<T>> newlist = new ArrayList<>();
+        list.forEach(t -> newlist.add(Optional.ofNullable(t).filter(pre)));
+        return newlist;
     }
 
     /**
-     * @param list
-     *            input list
-     * @param op
-     *            a function that, for each element, computes a key
-     * @param <T>
-     *            element type
-     * @param <R>
-     *            key type
+     * @param list input list
+     * @param op   a function that, for each element, computes a key
+     * @param <T>  element type
+     * @param <R>  key type
      * @return a map that groups into categories each element of the input list,
      *         based on the mapping done by the function
      */
@@ -80,20 +76,23 @@ public final class LambdaUtilities {
         /*
          * Suggestion: consider Map.merge
          */
-        return null;
+        final Map<R, Set<T>> map = new HashMap<>();
+        list.forEach(t -> {
+            map.merge(op.apply(t), new HashSet<>(Arrays.asList(t)), (t1, t2) -> {
+                t1.addAll(t2);
+                return t1;
+            });
+        });
+        return map;
     }
 
     /**
-     * @param map
-     *            input map
-     * @param def
-     *            the supplier
-     * @param <V>
-     *            element type
-     * @param <K>
-     *            key type
-     * @return a map whose non present values are filled with the value provided
-     *         by the supplier
+     * @param map input map
+     * @param def the supplier
+     * @param <V> element type
+     * @param <K> key type
+     * @return a map whose non present values are filled with the value provided by
+     *         the supplier
      */
     public static <K, V> Map<K, V> fill(final Map<K, Optional<V>> map, final Supplier<V> def) {
         /*
@@ -101,12 +100,13 @@ public final class LambdaUtilities {
          * 
          * Keep in mind that a map can be iterated through its forEach method
          */
-        return null;
+        Map<K, V> newMap = new HashMap<>();
+        map.forEach((k, v) -> newMap.put(k, v.orElseGet(def)));
+        return newMap;
     }
 
     /**
-     * @param args
-     *            ignored
+     * @param args ignored
      */
     public static void main(final String[] args) {
         final List<Integer> li = IntStream.range(1, 8).mapToObj(i -> Integer.valueOf(i)).collect(Collectors.toList());
@@ -121,8 +121,8 @@ public final class LambdaUtilities {
         final List<Optional<Integer>> opt = optFilter(li, x -> x % 3 == 0);
         System.out.println(opt);
         /*
-         * [Optional.empty, Optional.empty, Optional[3], Optional.empty,
-         * Optional.empty, Optional[6], Optional.empty]
+         * [Optional.empty, Optional.empty, Optional[3], Optional.empty, Optional.empty,
+         * Optional[6], Optional.empty]
          */
         final Map<Integer, Optional<Integer>> map = new HashMap<>();
         for (int i = 0; i < opt.size(); i++) {
