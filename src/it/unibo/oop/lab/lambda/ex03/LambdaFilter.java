@@ -46,12 +46,18 @@ public final class LambdaFilter extends JFrame {
                                                       .count())),
         ORDER("List all the words in alphabetical order",  t -> Arrays.stream(t.split(" "))
                                                                       .sorted()
-                                                                      .collect(Collectors.joining("\n"))),
-        COUNTOCCURRENCE("Count for each word", t ->  Arrays.stream(t.split(" "))
-                                                                     .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
-                                                                     .entrySet().stream()
-                                                                     .map(e -> e.getKey() + " -> " + e.getValue())
-                                                                     .collect(Collectors.joining("\n")));
+                                                                      .reduce((x, y) -> x + "\n" + y)
+                                                                      .get()
+                                                                      .toString()),
+        COUNTOCCURRENCE("Get count for each word", t ->
+                                               Arrays.stream(t.split(" "))
+                                                     .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
+                                                     .entrySet()
+                                                     .stream()
+                                                     .map(e -> e.getKey() + " -> " + e.getValue())
+                                                     .reduce((x, y) -> x + "\n" + y)
+                                                     .get()
+                                                     .toString());
 
 
         private final String commandName;
