@@ -15,6 +15,9 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 
+import java.util.Arrays;
+import java.util.stream.Collectors;
+
 /**
  * Modify this small program adding new filters.
  * Realize this exercise using as much as possible the Stream library.
@@ -35,7 +38,21 @@ public final class LambdaFilter extends JFrame {
     private static final long serialVersionUID = 1760990730218643730L;
 
     private enum Command {
-        IDENTITY("No modifications", Function.identity());
+        IDENTITY("No modifications", Function.identity()),
+        LOWERCASE("Convert to lowercase", String::toLowerCase),
+        COUNTCHARS("Count the number of chars", t -> String.valueOf(t.length())),
+        COUNTLINES("Count the number of lines", t -> String.valueOf(t.chars()
+                                                      .filter(ch -> ch == '\n')
+                                                      .count())),
+        ORDER("List all the words in alphabetical order",  t -> Arrays.stream(t.split(" "))
+                                                                      .sorted()
+                                                                      .collect(Collectors.joining("\n"))),
+        COUNTOCCURRENCE("Count for each word", t ->  Arrays.stream(t.split(" "))
+                                                                     .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
+                                                                     .entrySet().stream()
+                                                                     .map(e -> e.getKey() + " -> " + e.getValue())
+                                                                     .collect(Collectors.joining("\n")));
+
 
         private final String commandName;
         private final Function<String, String> fun;
@@ -80,7 +97,7 @@ public final class LambdaFilter extends JFrame {
         final int sw = (int) screen.getWidth();
         final int sh = (int) screen.getHeight();
         setSize(sw / 4, sh / 4);
-        setLocationByPlatform(true);
+        setLocationByPlatform(true); 
     }
 
     /**
