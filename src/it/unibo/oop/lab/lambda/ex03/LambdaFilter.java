@@ -41,23 +41,25 @@ public final class LambdaFilter extends JFrame {
         IDENTITY("No modifications", Function.identity()),
         LOWERCASE("Convert to lowercase", String::toLowerCase),
         COUNTCHARS("Count the number of chars", t -> String.valueOf(t.length())),
-        COUNTLINES("Count the number of lines", t -> String.valueOf(t.chars()
-                                                      .filter(ch -> ch == '\n')
-                                                      .count())),
-        ORDER("List all the words in alphabetical order",  t -> Arrays.stream(t.split(" "))
-                                                                      .sorted()
-                                                                      .reduce((x, y) -> x + "\n" + y)
-                                                                      .get()
-                                                                      .toString()),
+        COUNTLINES("Count the number of lines", t ->
+            String.valueOf(t.chars()
+                .filter(ch -> ch == '\n')
+                .count())),
+        ORDER("List all the words in alphabetical order",  t -> 
+            Arrays.stream(t.split(" "))
+            .sorted()
+            .reduce((x, y) -> x + "\n" + y)
+            .get()
+            .toString()),
         COUNTOCCURRENCE("Get count for each word", t ->
-                                               Arrays.stream(t.split(" "))
-                                                     .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
-                                                     .entrySet()
-                                                     .stream()
-                                                     .map(e -> e.getKey() + " -> " + e.getValue())
-                                                     .reduce((x, y) -> x + "\n" + y)
-                                                     .get()
-                                                     .toString());
+            Arrays.stream(t.split(" "))
+                .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
+                .entrySet()
+                .stream()
+                .map(e -> e.getKey() + " -> " + e.getValue())
+                .reduce((x, y) -> x + "\n" + y)
+                .get()
+                .toString());
 
 
         private final String commandName;
