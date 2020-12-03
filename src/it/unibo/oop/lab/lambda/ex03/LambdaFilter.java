@@ -36,8 +36,8 @@ import java.util.stream.Collectors;
 public final class LambdaFilter extends JFrame {
 
     private static final long serialVersionUID = 1760990730218643730L;
-    private static String LINES_DELIMITERS = "(?:\\r\\n|\\n|\\r)";
-    private static String WORD_DELIMITERS = "(\\s|\\p{Punct})+";
+    private static String LINES_DELIMITERS = "(?:\r\n|\n|\r)";
+    private static String WORD_DELIMITERS = "(\s|\\p{Punct})+";
 
     private enum Command {
         IDENTITY("No modifications", Function.identity()),
@@ -47,12 +47,12 @@ public final class LambdaFilter extends JFrame {
              String.valueOf(t.split(LINES_DELIMITERS).length)),
         ORDER("List all the words in alphabetical order",  t -> 
             Arrays.stream(t.split(WORD_DELIMITERS))
-            .sorted()
-            .reduce((x, y) -> x + "\n" + y)
-            .get()
-            .toString()),
+                .sorted()
+                .reduce((x, y) -> x + "\n" + y)
+                .get()
+                .toString()),
         COUNTOCCURRENCE("Get count for each word", t ->
-            Arrays.stream(t.split(" "))
+            Arrays.stream(t.split(WORD_DELIMITERS))
                 .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
                 .entrySet()
                 .stream()
