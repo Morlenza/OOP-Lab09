@@ -37,7 +37,7 @@ public final class LambdaFilter extends JFrame {
 
     private static final long serialVersionUID = 1760990730218643730L;
     private static String LINES_DELIMITERS = "(?:\\r\\n|\\n|\\r)";
-    private static String WORD_DELIMITERS = "(\\s|\\{Punct}|\\.\\s+|\\,\\s+)+";
+    private static String WORD_DELIMITERS = "(\\s|\\{Punct}|\\.\\z|\\.\\s+|\\,\\s+)+";
 
     private enum Command {
         IDENTITY("No modifications", Function.identity()),
