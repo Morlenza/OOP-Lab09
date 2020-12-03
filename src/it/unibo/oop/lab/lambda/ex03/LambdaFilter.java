@@ -36,17 +36,17 @@ import java.util.stream.Collectors;
 public final class LambdaFilter extends JFrame {
 
     private static final long serialVersionUID = 1760990730218643730L;
+    private static String LINES_DELIMITERS = "(?:\\r\\n|\\n|\\r)";
+    private static String WORD_DELIMITERS = "(\\s|\\{Punct}|\\.\\s+|\\,\\s+)+";
 
     private enum Command {
         IDENTITY("No modifications", Function.identity()),
         LOWERCASE("Convert to lowercase", String::toLowerCase),
         COUNTCHARS("Count the number of chars", t -> String.valueOf(t.length())),
         COUNTLINES("Count the number of lines", t ->
-            String.valueOf(t.chars()
-                .filter(ch -> ch == '\n')
-                .count())),
+             String.valueOf(t.split(LINES_DELIMITERS).length)),
         ORDER("List all the words in alphabetical order",  t -> 
-            Arrays.stream(t.split(" "))
+            Arrays.stream(t.split(WORD_DELIMITERS))
             .sorted()
             .reduce((x, y) -> x + "\n" + y)
             .get()
