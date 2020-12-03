@@ -44,13 +44,15 @@ public final class LambdaFilter extends JFrame {
         LOWERCASE("Convert to lowercase", String::toLowerCase),
         COUNTCHARS("Count the number of chars", t -> String.valueOf(t.length())),
         COUNTLINES("Count the number of lines", t ->
-             String.valueOf(t.split(LINES_DELIMITERS).length)),
+             String.valueOf(t.split(LINES_DELIMITERS).length)
+        ),
         ORDER("List all the words in alphabetical order",  t -> 
             Arrays.stream(t.split(WORD_DELIMITERS))
                 .sorted()
                 .reduce((x, y) -> x + "\n" + y)
-                .get()
-                .toString()),
+                .orElse("")
+                .toString()
+        ),
         COUNTOCCURRENCE("Get count for each word", t ->
             Arrays.stream(t.split(WORD_DELIMITERS))
                 .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
@@ -58,8 +60,9 @@ public final class LambdaFilter extends JFrame {
                 .stream()
                 .map(e -> e.getKey() + " -> " + e.getValue())
                 .reduce((x, y) -> x + "\n" + y)
-                .get()
-                .toString());
+                .orElse("")
+                .toString()
+        );
 
 
         private final String commandName;
